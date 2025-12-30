@@ -8,6 +8,9 @@ screen = pygame.display.set_mode((800,400))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
 
+#global variable
+score = 0
+
 class Barrier:
     def __init__(self):
         self.barrier = pygame.Surface((numpy.random.random_integers(10,50), numpy.random.random_integers(10,100)), pygame.SRCALPHA)
@@ -56,9 +59,44 @@ def rotate_robot_to_angle(robot, velocity, initial_direction):
     print(angle)
     return pygame.transform.rotate(robot, angle)
 
+def generate_grid(screen, robot_side_length):
+    screen_width, screen_height = screen.get_size()
+    num_cubes_width = screen_width // robot_side_length
+    num_cubes_height = screen_height // robot_side_length
+    #grid_squares = []
+    #grid_square_rects = []
+    grid = []
+    for i in range(0, num_cubes_width + 1):
+        for j in range(0, num_cubes_height+1):
+            grid_square = pygame.Surface((robot_side_length, robot_side_length))
+            grid_square.fill("Black")
+            grid_square_rect = grid_square.get_rect(topleft=(i*robot_side_length, j*robot_side_length))
+            #print(i*robot_side_length, j*robot_side_length)
+            #grid_squares.append(grid_square)
+            #grid_square_rects.append(grid_square_rect)
+            grid.append([grid_square, grid_square_rect])
+    return grid
+
+def grid_collision(robot_square, grid):
+    global score
+    remaining_grid = []
+    for surface, rect in grid:
+        if robot_square.colliderect(rect):
+            #square.fill("Black")
+            score +=1
+        else:
+            remaining_grid.append([surface,rect])
+    return remaining_grid
+
+def show_grid(remaining_grid):
+    for surface, rect in remaining_grid:
+        screen.blit(surface, rect)
+
 
 background = pygame.Surface((800,400))
-background.fill('Black')
+background.fill('Green')
+
+
 
 test_font = pygame.font.Font(None,50)
 test_surface = test_font.render("Score:", False, 'Green')
@@ -118,6 +156,11 @@ spawn_square = spawn.get_rect(center = center)
 
 barriers, barrier_rects = generate_barriers(spawn_square)
 
+#generate the grid
+grid = generate_grid(screen, robot_side_length)
+remaining_grid = grid
+#print(remaining_grid[6].get_rect().center)  #all of the surfaces in reamining_grid are in the same location
+#print(grid_square_rects[3].center)
 
 while True:
 
@@ -214,8 +257,11 @@ while True:
     if barrier_collision(center_beam_rect, barrier_rects):
         print("IMPACT IMMENINENT")
 
+    remaining_grid = grid_collision(robot_square, remaining_grid)
+    #print(remaining_grid)
+
     screen.blit(background, (0,0))
-    
+    show_grid(remaining_grid)
     show_barriers(barriers, barrier_rects)
     screen.blit(spawn, spawn_square)
     screen.blit(front_beam_transformed, front_beam_rect)
