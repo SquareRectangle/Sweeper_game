@@ -69,9 +69,9 @@ def generate_grid(screen, robot_side_length, barrier_rects):
             #print(i*robot_side_length, j*robot_side_length)
             #grid_squares.append(grid_square)
             #grid_square_rects.append(grid_square_rect)
-            #only draw the grid squares that don't collide with the barriers
-            if not barrier_collision(grid_square_rect, barrier_rects):
-                grid.append([grid_square, grid_square_rect])
+            #only draw the grid squares that don't collide with the barriers - maybe not actually
+            #if not barrier_collision(grid_square_rect, barrier_rects):
+            grid.append([grid_square, grid_square_rect])
     return grid
 
 def grid_collision(robot_square, grid):
@@ -91,8 +91,8 @@ def show_grid(remaining_grid, screen):
         screen.blit(surface, rect)
 
 def update_score(max_area, remaining_area):
-    score = (1-remaining_area/max_area)*100
-    return pygame.font.Font(None,50).render(f"Score:{round(score, 2)}%", False, 'Green')
+    score = max_area - remaining_area #(1-remaining_area/max_area)*100
+    return pygame.font.Font(None,50).render(f"Score:{round(score, 2)}", False, 'Green')
 
 def main():
     pygame.init()
