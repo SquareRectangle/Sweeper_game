@@ -42,7 +42,7 @@ def get_angle_btwn_vectors(v1, v2):
     x_axis_vector = numpy.array([1,0])
     angle_btwn_v_1_and_x_axis = numpy.arccos(numpy.dot(v1, x_axis_vector)/(numpy.linalg.norm(x_axis_vector)*numpy.linalg.norm(v1)))
     angle_btwn_v_2_and_x_axis = numpy.arccos(numpy.dot(v2, x_axis_vector)/(numpy.linalg.norm(x_axis_vector)*numpy.linalg.norm(v2)))
-    print(angle_btwn_v_1_and_x_axis, angle_btwn_v_2_and_x_axis)
+    #print(angle_btwn_v_1_and_x_axis, angle_btwn_v_2_and_x_axis)
     if angle_btwn_v_1_and_x_axis < angle_btwn_v_2_and_x_axis:
         return -1*angle
     else:
@@ -50,7 +50,7 @@ def get_angle_btwn_vectors(v1, v2):
 
 def rotate_robot_to_angle(robot, velocity, initial_direction):
     angle = get_angle_btwn_vectors(initial_direction, velocity)
-    print(angle)
+    #print(angle)
     return pygame.transform.rotate(robot, angle)
 
 def generate_grid(screen, robot_side_length, barrier_rects):
